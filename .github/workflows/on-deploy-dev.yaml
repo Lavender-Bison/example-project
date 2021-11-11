@@ -55,10 +55,11 @@ jobs:
         run: packer init build/example.pkr.hcl
 
       - name: Packer Build
-        run: packer build -var "network_project_id={{ env.NETWORK_PROJECT_ID }}" -var "project_id={{ env.PROJECT_ID }}" \
-            -var "image_family={{ env.IMAGE_FAMILY }}" -var "image_name={{ env.IMAGE_NAME }}" -var "subnetwork={{ env.SUBNETWORK }}" \
-            -var "zone={{ env.ZONE }}" -var "service_account={{ env.SERVICE_ACCOUNT }}" -var "commit_hash={{ steps.commit_hash.outputs.sha_short }}" \
-            build/example.pkr.hcl
+        run: |
+              packer build -var "network_project_id={{ env.NETWORK_PROJECT_ID }}" -var "project_id={{ env.PROJECT_ID }}" \
+              -var "image_family={{ env.IMAGE_FAMILY }}" -var "image_name={{ env.IMAGE_NAME }}" -var "subnetwork={{ env.SUBNETWORK }}" \
+              -var "zone={{ env.ZONE }}" -var "service_account={{ env.SERVICE_ACCOUNT }}" -var "commit_hash={{ steps.commit_hash.outputs.sha_short }}" \
+              build/example.pkr.hcl
 
       - name: Terraform Init
         run: terraform init -backend-config="bucket=${{ env.TF_BUCKET }}"
