@@ -48,6 +48,14 @@ jobs:
               -var "image_family=${{ env.IMAGE_FAMILY }}" -var "image_name=${{ env.IMAGE_NAME }}" -var "subnetwork=${{ env.SUBNETWORK }}" \
               -var "zone=${{ env.ZONE }}" -var "service_account=${{ env.SERVICE_ACCOUNT }}" -var "commit_hash=${{ steps.commit_hash.outputs.sha_short }}" \
               build/example.pkr.hcl
+    outputs:
+      image_family:
+        value: ${{ env.IMAGE_FAMILY }}
+      image_name:
+        value: ${{ env.IMAGE_NAME }}
+      commit_hash:
+        value: ${{ steps.commit_hash.outputs.sha_short }}
+
   terraform:
     name: "Deploy Development Infrastructure"
     runs-on: ubuntu-latest
@@ -57,6 +65,9 @@ jobs:
       ORG_ID: "937800926639"
       PROJECT_ID: example-dev-4c39ae
       TF_BUCKET: 134926683163-tfstate
+    defaults:
+      run:
+        working-directory: terraform
     steps:
       - name: Install Terraform
         run: |
@@ -80,4 +91,7 @@ jobs:
       - name: Terraform Init
         run: terraform init -backend-config="bucket=${{ env.TF_BUCKET }}"
       - name: Terraform Apply
-        run: terraform apply -auto-approve -no-color -var "org_id=${{ env.ORG_ID }}" -var "project_id=${{ env.PROJECT_ID }}"
+        run: |
+              terraform apply -auto-approve -no-color -var "org_id=${{ env.ORG_ID }}" -var "project_id=${{ env.PROJECT_ID }}" \
+              -var "image_family=${{ needs.packer.outputs.image_family }}" -var "Image_name=${{ needs.packer.outputs.image_name }}" \
+              -var "commit_hash=${{ needs.packer.outputs.commit_hash }}"
