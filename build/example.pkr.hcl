@@ -1,21 +1,21 @@
 variable "network_project_id" {
-  type    = string
+  type = string
 }
 
 variable "project_id" {
-  type    = string
+  type = string
 }
 
 variable "service_account" {
-  type    = string
+  type = string
 }
 
 variable "subnetwork" {
-  type    = string
+  type = string
 }
 
 variable "zone" {
-  type    = string
+  type = string
 }
 
 variable "image_family" {
@@ -55,7 +55,8 @@ source "googlecompute" "gce" {
 
 build {
   sources = ["source.googlecompute.gce"]
-      provisioner "ansible" {
-      playbook_file = "../ansible/build/playbook.yml"
-    }
+
+  provisioner "ansible" {
+    playbook_file = "ansible/playbook.yml"
+  }
 }
