@@ -83,10 +83,10 @@ jobs:
           service_account_key: ${{ secrets.BUILD_KEY_DEV }}
           export_default_credentials: true
       - name: Terraform Init
-        working-directory: infrastructure
+        working-directory: ./infrastructure
         run: terraform init -backend-config="bucket=${{ env.TF_BUCKET }}"
       - name: Terraform Apply
-        working-directory: infrastructure
+        working-directory: ./infrastructure
         run: |
               terraform apply -auto-approve -no-color -var "org_id=${{ env.ORG_ID }}" -var "project_id=${{ env.PROJECT_ID }}" \
               -var "image_family=${{ needs.packer.outputs.image_family }}" -var "Image_name=${{ needs.packer.outputs.image_name }}" \
