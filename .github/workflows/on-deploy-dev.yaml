@@ -14,7 +14,7 @@ jobs:
       ORG_ID: "937800926639"
       PROJECT_ID: example-dev-4c39ae
       TF_BUCKET: 134926683163-tfstate
-      SERVICE_ACCOUNT: tf-state@example-dev-4c39ae.iam.gserviceaccount.com
+      SERVICE_ACCOUNT: github-workflow@example-dev-4c39ae.iam.gserviceaccount.com
       IMAGE_FAMILY: example-family
       IMAGE_NAME: example-image
       NETWORK_PROJECT_ID: network-prod-2a8575
