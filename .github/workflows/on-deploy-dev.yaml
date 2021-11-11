@@ -49,12 +49,9 @@ jobs:
               -var "zone=${{ env.ZONE }}" -var "service_account=${{ env.SERVICE_ACCOUNT }}" -var "commit_hash=${{ steps.commit_hash.outputs.sha_short }}" \
               build/example.pkr.hcl
     outputs:
-      image_family:
-        value: ${{ env.IMAGE_FAMILY }}
-      image_name:
-        value: ${{ env.IMAGE_NAME }}
-      commit_hash:
-        value: ${{ steps.commit_hash.outputs.sha_short }}
+      image_family: ${{ env.IMAGE_FAMILY }}
+      image_name: ${{ env.IMAGE_NAME }}
+      commit_hash: ${{ steps.commit_hash.outputs.sha_short }}
 
   terraform:
     name: "Deploy Development Infrastructure"
