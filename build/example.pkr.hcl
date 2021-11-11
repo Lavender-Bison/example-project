@@ -49,7 +49,7 @@ source "googlecompute" "gce" {
   use_os_login                = true
   zone                        = "${var.zone}"
   tags = [
-    "packer-build-machine"
+    "build-machine-ssh"
   ]
 }
 
