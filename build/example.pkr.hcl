@@ -57,6 +57,8 @@ build {
   sources = ["source.googlecompute.gce"]
 
   provisioner "ansible" {
-    playbook_file = "./ansible/playbook.yml"
+
+    # Relative to the workind directory where Packer is run.
+    playbook_file = "build/ansible/playbook.yml"
   }
 }
