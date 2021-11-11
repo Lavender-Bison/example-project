@@ -27,13 +27,6 @@ jobs:
       SERVICE_ACCOUNT: tf-state@example-dev-4c39ae.iam.gserviceaccount.com
 
     steps:
-
-      - name: Get Commit Hash
-        id: commit_hash
-        shell: bash
-        run: |
-          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-
       - name: Install Hashicorp Tools
         run: |
               curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
@@ -43,6 +36,12 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Get Commit Hash
+        id: commit_hash
+        shell: bash
+        run: |
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@master
@@ -56,7 +55,6 @@ jobs:
 
       - name: Packer Build
         run: |
-              echo ${{ steps.commit_hash.outputs.sha_short }}
               packer build -var "network_project_id=${{ env.NETWORK_PROJECT_ID }}" -var "project_id=${{ env.PROJECT_ID }}" \
               -var "image_family=${{ env.IMAGE_FAMILY }}" -var "image_name=${{ env.IMAGE_NAME }}" -var "subnetwork=${{ env.SUBNETWORK }}" \
               -var "zone=${{ env.ZONE }}" -var "service_account=${{ env.SERVICE_ACCOUNT }}" -var "commit_hash=${{ steps.commit_hash.outputs.sha_short }}" \
