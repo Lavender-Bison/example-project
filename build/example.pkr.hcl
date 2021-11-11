@@ -57,6 +57,6 @@ build {
   sources = ["source.googlecompute.gce"]
 
   provisioner "ansible" {
-    playbook_file = "ansible/playbook.yml"
+    playbook_file = "./ansible/playbook.yml"
   }
 }
