@@ -3,8 +3,6 @@
 
 on:
   push:
-    branches:
-      - "**"
     branches-ignore:
       - qa
       - main
