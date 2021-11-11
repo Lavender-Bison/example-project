@@ -1,14 +1,13 @@
 on:
   pull_request:
 jobs:
-  terraform:
-    name: 'Terraform'
+  prepare:
+    name: "Prepare Deploy"
     runs-on: ubuntu-latest
     env:
       ORG_ID: "937800926639"
-      PROJECT_ID: terraform-projects-gcp-483285
-      TF_BUCKET: 900097363476-tfstate
-      BILLING_ACCOUNT_ID: 0116EA-2A299B-BFF97D
+      PROJECT_ID: example-prod-b68227
+      TF_BUCKET: 946152399515-tfstate
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -31,7 +30,7 @@ jobs:
         run: terraform validate -no-color
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color -var "org_id=${{ env.ORG_ID }}" -var "project_id=${{ env.PROJECT_ID }}" -var "billing_account_id=${{ env.BILLING_ACCOUNT_ID }}"
+        run: terraform plan -no-color -var "org_id=${{ env.ORG_ID }}" -var "project_id=${{ env.PROJECT_ID }}"
         continue-on-error: true
       - name: Update Pull Request
         uses: actions/github-script@0.9.0

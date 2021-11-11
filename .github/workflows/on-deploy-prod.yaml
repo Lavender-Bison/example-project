@@ -1,0 +1,41 @@
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    name: "Deploy"
+    runs-on: ubuntu-latest
+    env:
+      # General variables for production go here.
+      ORG_ID: "937800926639"
+      PROJECT_ID: example-prod-b68227
+
+      # Terraform variables for production go here.
+      TF_BUCKET: 946152399515-tfstate
+
+      # Packer variables for production go here.
+      IMAGE_FAMILY: example-family
+      IMAGE_NAME: example-image
+      NETWORK_PROJECT_ID: network-prod-2a8575
+      SUBNETWORK: general-purpose-computation
+      ZONE: us-central1-a
+      SERVICE_ACCOUNT: tf-state@example-prod-b68227.iam.gserviceaccount.com
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          service_account_key: ${{ secrets.SA_KEY_PROD }}
+          export_default_credentials: true
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+      - name: Terraform Init
+        id: init
+        run: terraform init -backend-config="bucket=${{ env.TF_BUCKET }}"
+      - name: Terraform Apply
+        id: plan
+        run: terraform apply -auto-approve -no-color -var "org_id=${{ env.ORG_ID }}" -var "project_id=${{ env.PROJECT_ID }}"

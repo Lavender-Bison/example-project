@@ -1,0 +1,8 @@
+- name: Example Build Playbook
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Git
+      apt:
+        name: git
+        state: present
