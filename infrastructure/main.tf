@@ -32,7 +32,7 @@ resource "google_compute_instance_template" "webserver" {
   }
 
   network_interface {
-    subnetworks = "projects/network-prod-2a8575/regions/us-central1/subnetworks/general-purpose-computation-dev"
+    subnetwork = "projects/network-prod-2a8575/regions/us-central1/subnetworks/general-purpose-computation-dev"
   }
 
   metadata = {
