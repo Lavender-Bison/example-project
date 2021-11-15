@@ -8,10 +8,6 @@ variable "project_id" {
   description = "The project ID for this Terraform workspace."
 }
 
-variable "image-family" {
-  type = string
-}
-
 variable "image_name" {
   type = string
 }
