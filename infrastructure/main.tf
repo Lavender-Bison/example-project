@@ -69,7 +69,7 @@ resource "google_compute_instance_group_manager" "webserver" {
     instance_template  = google_compute_instance_template.webserver.id
   }
 
-  target_pools = [google_compute_target_pool.webserver.id]
+
   target_size  = 2
 
   auto_healing_policies {
