@@ -26,7 +26,7 @@ resource "google_compute_instance_template" "webserver" {
 
   // Create a new boot disk from an image
   disk {
-    source_image      = "projects/${project_id}/global/images/${var.image_name}-${var.commit_hash}"
+    source_image      = "projects/${var.project_id}/global/images/${var.image_name}-${var.commit_hash}"
     auto_delete       = true
     boot              = true
   }
