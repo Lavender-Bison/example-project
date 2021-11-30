@@ -90,3 +90,11 @@ jobs:
         run: |
               terraform apply -auto-approve -no-color -var "org_id=${{ env.ORG_ID }}" -var "project_id=${{ env.PROJECT_ID }}" \
               -var "image_name=${{ needs.packer.outputs.image_name }}" -var "commit_hash=${{ needs.packer.outputs.commit_hash }}"
+  ansible:
+    name: "Deploy Ansible"
+    runs-on: ubuntu-latest
+    needs:
+      - terraform
+    env: {}
+    steps:
+      - name: 

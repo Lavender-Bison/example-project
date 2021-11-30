@@ -1,0 +1,4 @@
+plugin: gcp_compute
+projects:
+  - example-qa-212553
+auth_kind: application
