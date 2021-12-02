@@ -1,0 +1,17 @@
+# https://docs.ansible.com/ansible/latest/collections/google/cloud/gcp_compute_inventory.html#parameters
+plugin: gcp_compute
+
+projects:
+  - {{ project_id }}
+
+keyed_groups:
+
+  # Will group compute instances into "label_{label_key}_{label_value}" named groups based on their labels.
+  - prefix: label
+    key: labels
+
+# Note: the public IP will be the address given here. When using in enterprise evironment, internal IP should be used
+#       instead. This can be configured using the parameters listed in the link above.
+
+# Use application default credentials on local machines and Github Workflow.
+auth_kind: application

@@ -1,4 +1,0 @@
-plugin: gcp_compute
-projects:
-  - example-prod-b68227
-auth_kind: application

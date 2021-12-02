@@ -1,4 +1,5 @@
-# This example uses a custom built image that includes hosts a simple web server.
+# Define infrastructure for a single two node managed instance group of VMs, load balanced
+# using a public HTTP/s load balancer.
 
 resource "google_service_account" "webserver" {
   account_id   = "web-server"
@@ -9,34 +10,31 @@ resource "google_compute_instance_template" "webserver" {
   name        = "webserver"
   description = "This template is used to create web server instances."
 
-  tags = ["foo", "bar"]
-
   labels = {
+
+    # Labels are used to group instances in the future Ansible postbuild step,
+    # so I'll use this to group this machine into a "webserver" group.
+    # One could theorhetically have groups like "db" or "microservice-[x]".
     ansible = "webserver"
   }
 
-  instance_description = "description assigned to instances"
+  instance_description = "Instance responsable for acting as a web server in the example-project."
   machine_type         = "e2-small"
-  can_ip_forward       = false
 
   scheduling {
     automatic_restart   = true
     on_host_maintenance = "MIGRATE"
   }
 
-  // Create a new boot disk from an image
+  // Create the instance based on the image passed in that comes from the previous Packer build step.
   disk {
-    source_image      = "projects/${var.project_id}/global/images/${var.image_name}-${var.commit_hash}"
-    auto_delete       = true
-    boot              = true
+    source_image = "projects/${var.project_id}/global/images/${var.image_name}-${var.commit_hash}"
+    auto_delete  = true
+    boot         = true
   }
 
   network_interface {
-    subnetwork = "projects/network-prod-2a8575/regions/us-central1/subnetworks/general-purpose-computation-dev"
-  }
-
-  metadata = {
-    foo = "bar"
+    subnetwork = var.subnetwork
   }
 
   service_account {
@@ -44,8 +42,14 @@ resource "google_compute_instance_template" "webserver" {
     email  = google_service_account.webserver.email
     scopes = ["cloud-platform"]
   }
+
+  metadata = {
+    enable-oslogin = "TRUE"
+  }
+
 }
 
+# This health check will fail until we run the final postbuild Ansible. This is fine.
 resource "google_compute_health_check" "autohealing" {
   name                = "autohealing-health-check"
   check_interval_sec  = 5
@@ -66,11 +70,10 @@ resource "google_compute_instance_group_manager" "webserver" {
   zone               = "us-central1-a"
 
   version {
-    instance_template  = google_compute_instance_template.webserver.id
+    instance_template = google_compute_instance_template.webserver.id
   }
 
-
-  target_size  = 2
+  target_size = 2
 
   auto_healing_policies {
     health_check      = google_compute_health_check.autohealing.id

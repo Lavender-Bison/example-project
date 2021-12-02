@@ -1,8 +1,53 @@
-- name: Example Build Playbook
-  hosts: all
+# This playbook runs on the image being built with Packer.
+#
+# You could theorhetically do the following things here:
+#   * Build in the source code for your app.
+#   * Install application dependencies.
+#   * Make build time configuration changes to the image.
+#
+# Obviously it doesn't make sense to start running your app here, but you could include a systemd or keepalived service
+# file to ensure your app starts when the future instance of this image starts.
+- name: Webserver Build Playbook
+  hosts: all # It's all, but really just the single image being built with Packer.
   become: yes
   tasks:
-    - name: Install Git
-      apt:
-        name: git
+
+    # This example is for a Nginx webserver, so I'll just install Nginx and add my website here.
+    # I'll use the postbuild Ansible step to start the server and adjust Ubuntu firewall.
+
+    - name: Install Nginx
+      ansible.builtin.apt:
+        name: nginx
         state: present
+
+    - name: Move website
+      ansible.builtin.copy:
+        src: ../../../website/src/
+        dst: /var/www/example.lavenderbison.com/html/
+      
+    - name: Move website config to Nginx available sites
+      ansible.builtin.copy:
+        src: files/example.lavenderbison.com
+        dst: /etc/nginx/sites-available/
+
+    - name: Move website from site available to enabled
+      ansible.builtin.file:
+        src: /etc/nginx/sites-available/example.lavenderbison.com
+        dest: /etc/nginx/sites-enabled/example.lavenderbison.com
+        state: link
+
+    - name: Allow Nginx through UFW
+      community.general.ufw:
+        rule: allow
+        name: Nginx Full
+        delete: yes
+    
+    - name: Allow SSH through UFW
+      community.general.ufw:
+        rule: allow
+        name: OpenSSH
+        delete: yes
+
+    - name: Enable firewall
+      community.general.ufw:
+        state: enabled

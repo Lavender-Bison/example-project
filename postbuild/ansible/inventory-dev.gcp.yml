@@ -1,9 +1,0 @@
-# https://docs.ansible.com/ansible/latest/collections/google/cloud/gcp_compute_inventory.html#parameters
-
-plugin: gcp_compute
-projects:
-  - example-dev-4c39ae
-keyed_groups:
-  - prefix: gcp
-    key: labels
-auth_kind: application
