@@ -90,7 +90,7 @@ jobs:
         working-directory: ./infrastructure
         run: |
           terraform apply -auto-approve -no-color -var "org_id=${{ env.ORG_ID }}" -var "project_id=${{ env.PROJECT_ID }}" \
-          -var "image_name=${{ needs.packer.outputs.image_name }}" -var "commit_hash=${{ needs.packer.outputs.commit_hash }}" \
+          -var "image_name=${{ needs.build.outputs.image_name }}" -var "commit_hash=${{ needs.build.outputs.commit_hash }}" \
           -var "subnetwork=${{ env.SUBNETWORK }}"
   postbuild:
     name: "Postbuild"
