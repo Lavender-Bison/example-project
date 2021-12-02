@@ -103,18 +103,23 @@ jobs:
       - name: Install Ansible
         run: |
           pip install ansible google-auth
+
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@master
         with:
           project_id: ${{ env.PROJECT_ID }}
           service_account_key: ${{ secrets.BUILD_KEY_DEV }}
           export_default_credentials: true
+
+        # This should really be an action.
+        # I can make that a TODO.
       - name: Configure oslogin
         id: oslogin
         working-directory: ./postbuild
         run: |
-          ansible_user=$(./setup-os-login.sh)
+          ansible_user=$(sh ./setup-os-login.sh)
           echo "::set-output name=ansible_user::$ansible_user"
+
       - name: Run Ansible
         working-directory: ./postbuild/ansible
         run: |
