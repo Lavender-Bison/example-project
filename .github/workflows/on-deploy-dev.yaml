@@ -117,8 +117,12 @@ jobs:
         id: oslogin
         working-directory: ./postbuild
         run: |
-          ansible_user=$(sh ./setup-os-login.sh)
-          echo "::set-output name=ansible_user::$ansible_user"
+          ssh-keygen -P ""
+          gcloud compute os-login ssh-keys add --key-file=/home/$USER/.ssh/id_rsa.pub --ttl 10m
+          current=$(gcloud config get-value account)
+          id=$(gcloud iam service-accounts describe $current --format='value(uniqueId)')
+          ansible_user="sa_${id}"
+          echo "::set-output name=ansible_user::${ansible_user}"
 
       - name: Run Ansible
         working-directory: ./postbuild/ansible
