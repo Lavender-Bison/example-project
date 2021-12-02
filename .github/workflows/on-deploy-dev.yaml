@@ -118,4 +118,4 @@ jobs:
       - name: Run Ansible
         working-directory: ./postbuild/ansible
         run: |
-          ansible-playbook -i inventory.gcp.yml --extra-vars "project_id=${{ env.PROJECT_ID }} ansible_user=${{ steps.oslogin.outputs.ansible_user }}"
+          ansible-playbook -i inventory.gcp.yml --extra-vars "project_id=${{ env.PROJECT_ID }} ansible_user=${{ steps.oslogin.outputs.ansible_user }}" playbook.yml

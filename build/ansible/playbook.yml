@@ -23,12 +23,12 @@
     - name: Move website
       ansible.builtin.copy:
         src: ../../../website/src/
-        dst: /var/www/example.lavenderbison.com/html/
+        dest: /var/www/example.lavenderbison.com/html/
       
     - name: Move website config to Nginx available sites
       ansible.builtin.copy:
         src: files/example.lavenderbison.com
-        dst: /etc/nginx/sites-available/
+        dest: /etc/nginx/sites-available/
 
     - name: Move website from site available to enabled
       ansible.builtin.file:
