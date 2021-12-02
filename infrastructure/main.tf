@@ -7,7 +7,7 @@ resource "google_service_account" "webserver" {
 }
 
 resource "google_compute_instance_template" "webserver" {
-  name        = "webserver"
+  name_prefix        = "webserver"
   description = "This template is used to create web server instances."
 
   labels = {
@@ -45,6 +45,10 @@ resource "google_compute_instance_template" "webserver" {
 
   metadata = {
     enable-oslogin = "TRUE"
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 
 }
