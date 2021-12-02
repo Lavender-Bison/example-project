@@ -113,7 +113,7 @@ jobs:
         id: oslogin
         working-directory: ./postbuild
         run: |
-          ansible_user=$(./postbuild/setup-os-login.sh)
+          ansible_user=$(setup-os-login.sh)
           echo "::set-output name=ansible_user::$ansible_user"
       - name: Run Ansible
         working-directory: ./postbuild/ansible
