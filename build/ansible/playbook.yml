@@ -27,7 +27,7 @@
       
     - name: Move website config to Nginx available sites
       ansible.builtin.copy:
-        src: example.lavenderbison.com
+        src: example.lavenderbison.com.conf
         dest: /etc/nginx/sites-available/
 
     - name: Move website from site available to enabled
