@@ -103,8 +103,8 @@ resource "google_compute_instance_group" "webservers_instance_group" {
   description = "The group of Nginx webservers."
 
   instances = [
-    google_compute_instance.webserver_1.id,
-    google_compute_instance.webserver_2.id,
+    google_compute_instance.webserver_1.self_link,
+    google_compute_instance.webserver_2.self_link,
   ]
 
   named_port {
@@ -113,4 +113,8 @@ resource "google_compute_instance_group" "webservers_instance_group" {
   }
 
   zone = "us-central1-a"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
