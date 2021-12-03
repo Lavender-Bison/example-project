@@ -24,16 +24,12 @@ resource "google_compute_instance" "webserver_1" {
   instance_description = "Instance responsable for acting as a web server in the example-project."
   machine_type         = "e2-small"
 
-  scheduling {
-    automatic_restart   = true
-    on_host_maintenance = "MIGRATE"
-  }
+  boot_disk {
+    initialize_params {
 
-  // Create the instance based on the image passed in that comes from the previous Packer build step.
-  disk {
-    source_image = "projects/${var.project_id}/global/images/${var.image_name}-${var.commit_hash}"
-    auto_delete  = true
-    boot         = true
+      // Create the instance based on the image passed in that comes from the previous Packer build step.
+      image = "projects/${var.project_id}/global/images/${var.image_name}-${var.commit_hash}"
+    }
   }
 
   network_interface {
@@ -74,16 +70,12 @@ resource "google_compute_instance" "webserver_2" {
   instance_description = "Instance responsable for acting as a web server in the example-project."
   machine_type         = "e2-small"
 
-  scheduling {
-    automatic_restart   = true
-    on_host_maintenance = "MIGRATE"
-  }
+  boot_disk {
+    initialize_params {
 
-  // Create the instance based on the image passed in that comes from the previous Packer build step.
-  disk {
-    source_image = "projects/${var.project_id}/global/images/${var.image_name}-${var.commit_hash}"
-    auto_delete  = true
-    boot         = true
+      // Create the instance based on the image passed in that comes from the previous Packer build step.
+      image = "projects/${var.project_id}/global/images/${var.image_name}-${var.commit_hash}"
+    }
   }
 
   network_interface {
