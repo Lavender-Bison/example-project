@@ -7,7 +7,7 @@ resource "google_service_account" "webserver" {
 }
 
 resource "google_compute_instance_template" "webserver" {
-  name_prefix        = "webserver"
+  name_prefix = "webserver"
   description = "This template is used to create web server instances."
 
   # Used for the firewall rule that allows Ansible to SSH into machines.
@@ -38,6 +38,10 @@ resource "google_compute_instance_template" "webserver" {
 
   network_interface {
     subnetwork = var.subnetwork
+
+    # External IP just because I don't have a private network for this demo.
+    access_config {
+    }
   }
 
   service_account {
