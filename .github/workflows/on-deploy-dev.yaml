@@ -99,6 +99,7 @@ jobs:
       - infrastructure
     env:
       PROJECT_ID: example-dev-4c39ae
+      INVENTORY: inventory-dev.gcp.yml
     steps:
       - name: Install Ansible
         run: |
@@ -118,13 +119,12 @@ jobs:
         working-directory: ./postbuild
         run: |
           ssh-keygen -P ""
-          gcloud compute os-login ssh-keys add --key-file=/home/$USER/.ssh/id_rsa.pub --ttl 10m
+          gcloud compute os-login ssh-keys add --key-file=$HOME/.ssh/id_rsa.pub --ttl 10m
           current=$(gcloud config get-value account)
           id=$(gcloud iam service-accounts describe $current --format='value(uniqueId)')
-          ansible_user="sa_${id}"
-          echo "::set-output name=ansible_user::${ansible_user}"
+          echo "::set-output name=ansible_user::sa_${id}"
 
       - name: Run Ansible
         working-directory: ./postbuild/ansible
         run: |
-          ansible-playbook -i inventory.gcp.yml --extra-vars "project_id=${{ env.PROJECT_ID }} ansible_user=${{ steps.oslogin.outputs.ansible_user }}" playbook.yml
+          ansible-playbook -i $INVENTORY --extra-vars "ansible_user=${{ steps.oslogin.outputs.ansible_user }}" playbook.yml
