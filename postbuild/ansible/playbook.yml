@@ -3,6 +3,7 @@
   # Only configure the machines we gave the {ansible = webserver} label in the Terraform.
   hosts: label_ansible_webserver
   become: yes
+  gather_facts: no
   tasks:
 
     # First step is always to wait for all machines in the group to come up in the case where
