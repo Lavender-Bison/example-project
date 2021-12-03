@@ -90,4 +90,14 @@ resource "google_compute_instance_group_manager" "webserver" {
     health_check      = google_compute_health_check.autohealing.id
     initial_delay_sec = 300
   }
+
+  update_policy {
+    type                  = "PROACTIVE"
+    minimal_action        = "REPLACE"
+    max_surge_percent     = 20
+    max_unavailable_fixed = 2
+    min_ready_sec         = 50
+    replacement_method    = "RECREATE"
+  }
+
 }
