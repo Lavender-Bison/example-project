@@ -36,18 +36,39 @@
         dest: /etc/nginx/sites-enabled/example.lavenderbison.com
         state: link
 
-    - name: Allow Nginx through UFW
-      community.general.ufw:
-        rule: allow
-        name: Nginx Full
-        delete: yes
+    - name: ensure ufw installed
+      ansible.builtin.apt:
+        name: ufw
+        state: present
     
-    - name: Allow SSH through UFW
+    - name: ufw deny incoming
+      community.general.ufw:
+        direction: incoming
+        proto: any
+        policy: deny
+      notify:
+      - reload ufw
+
+    - name: ufw allow outgoing
+      community.general.ufw:
+        direction: outgoing
+        proto: any
+        policy: allow
+      notify:
+      - reload ufw
+
+    - name: ufw allow ssh
       community.general.ufw:
         rule: allow
         name: OpenSSH
-        delete: yes
+      notify:
+      - reload ufw
 
-    - name: Enable firewall
+    - name: enable ufw service
       community.general.ufw:
         state: enabled
+
+  handlers:
+    - name: reload ufw
+      ufw:
+        state: reloaded
