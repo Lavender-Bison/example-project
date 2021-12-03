@@ -21,7 +21,6 @@ resource "google_compute_instance" "webserver_1" {
     ansible = "webserver"
   }
 
-  instance_description = "Instance responsable for acting as a web server in the example-project."
   machine_type         = "e2-small"
 
   boot_disk {
@@ -67,7 +66,6 @@ resource "google_compute_instance" "webserver_2" {
     ansible = "webserver"
   }
 
-  instance_description = "Instance responsable for acting as a web server in the example-project."
   machine_type         = "e2-small"
 
   boot_disk {
