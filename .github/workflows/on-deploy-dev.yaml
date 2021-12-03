@@ -119,7 +119,7 @@ jobs:
         id: oslogin
         working-directory: ./postbuild
         run: |
-          ssh-keygen -t rsa -N "" -f id_rsa.pub
+          ssh-keygen -t rsa -N "" -f id_rsa
           gcloud compute os-login ssh-keys add --key-file=id_rsa.pub --ttl 10m
           current=$(gcloud config get-value account)
           id=$(gcloud iam service-accounts describe $current --format='value(uniqueId)')
