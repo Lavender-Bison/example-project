@@ -21,7 +21,7 @@ resource "google_compute_instance" "webserver_1" {
     ansible = "webserver"
   }
 
-  machine_type         = "e2-small"
+  machine_type = "e2-small"
 
   boot_disk {
     initialize_params {
@@ -66,7 +66,7 @@ resource "google_compute_instance" "webserver_2" {
     ansible = "webserver"
   }
 
-  machine_type         = "e2-small"
+  machine_type = "e2-small"
 
   boot_disk {
     initialize_params {
