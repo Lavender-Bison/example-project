@@ -120,12 +120,14 @@ jobs:
         working-directory: ./postbuild
         run: |
           ssh-keygen -t rsa -N "" -f id_rsa
+          key_file=$(realpath id_rsa)
           gcloud compute os-login ssh-keys add --key-file=id_rsa.pub --ttl 10m
           current=$(gcloud config get-value account)
           id=$(gcloud iam service-accounts describe $current --format='value(uniqueId)')
+          echo "::set-output name=ssh_private_key_file::$key_file"
           echo "::set-output name=ansible_user::sa_${id}"
 
       - name: Run Ansible
         working-directory: ./postbuild/ansible
         run: |
-          ansible-playbook -i $INVENTORY --extra-vars "ansible_user=${{ steps.oslogin.outputs.ansible_user }}" playbook.yml
+          ansible-playbook -i $INVENTORY --extra-vars "ansible_ssh_private_key_file=${{ steps.oslogin.outputs.ssh_private_key_file }} ansible_user=${{ steps.oslogin.outputs.ansible_user }}" playbook.yml
