@@ -15,60 +15,23 @@
     # This example is for a Nginx webserver, so I'll just install Nginx and add my website here.
     # I'll use the postbuild Ansible step to start the server and adjust Ubuntu firewall.
 
-    - name: Install Nginx
+    - name: Install Nginx.
       ansible.builtin.apt:
         name: nginx
         state: present
 
-    - name: Move website
+    - name: Copy website source to image.
       ansible.builtin.copy:
         src: ../../../website/src/
         dest: /var/www/example.lavenderbison.com/html/
       
-    - name: Move website config to Nginx available sites
+    - name: Move website config to Nginx sites available.
       ansible.builtin.copy:
         src: example.lavenderbison.com
         dest: /etc/nginx/sites-available/
 
-    - name: Move website from site available to enabled
+    - name: Move website from sites available to sites enabled.
       ansible.builtin.file:
         src: /etc/nginx/sites-available/example.lavenderbison.com
         dest: /etc/nginx/sites-enabled/example.lavenderbison.com
         state: link
-
-    - name: ensure ufw installed
-      ansible.builtin.apt:
-        name: ufw
-        state: present
-    
-    - name: ufw deny incoming
-      community.general.ufw:
-        direction: incoming
-        proto: any
-        policy: deny
-      notify:
-      - reload ufw
-
-    - name: ufw allow outgoing
-      community.general.ufw:
-        direction: outgoing
-        proto: any
-        policy: allow
-      notify:
-      - reload ufw
-
-    - name: ufw allow ssh
-      community.general.ufw:
-        rule: allow
-        name: OpenSSH
-      notify:
-      - reload ufw
-
-    - name: enable ufw service
-      community.general.ufw:
-        state: enabled
-
-  handlers:
-  - name: reload ufw
-    ufw:
-      state: reloaded

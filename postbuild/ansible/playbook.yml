@@ -8,11 +8,48 @@
 
     # First step is always to wait for all machines in the group to come up in the case where
     # this playbook starts running before the machines do.
-    - name: Wait for machine start
+    - name: Wait for machine start.
       wait_for_connection:
         timeout: 600 # ten minutes
+
+    - name: Ensure UFW is installed.
+      ansible.builtin.apt:
+        name: ufw
+        state: present
+    
+    - name: Configure UFW to deny all incoming.
+      community.general.ufw:
+        direction: incoming
+        proto: any
+        policy: deny
+      notify:
+      - Reload UFW.
+
+    - name: Configure UFW to allow all outgoing.
+      community.general.ufw:
+        direction: outgoing
+        proto: any
+        policy: allow
+      notify:
+      - Reload UFW.
+
+    - name: Configure UFW to allow all incoming SSH.
+      community.general.ufw:
+        rule: allow
+        name: OpenSSH
+      notify:
+      - Reload UFW.
+
+    - name: Enable UFW.
+      community.general.ufw:
+        state: enabled
       
-    - name: Start nginx
+    - name: Start the Nginx service.
       service:
         name: nginx
         state: started
+
+  handlers:
+  - name: Reload UFW.
+    ufw:
+      state: reloaded
