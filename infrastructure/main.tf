@@ -6,9 +6,9 @@ resource "google_service_account" "webserver" {
   display_name = "Web Server Service Account"
 }
 
-resource "google_compute_instance_template" "webserver" {
-  name_prefix = "webserver"
-  description = "This template is used to create web server instances."
+resource "google_compute_instance" "webserver_1" {
+  name        = "webserver-1"
+  description = "Simple webserver that hosts a static website with Nginx."
 
   # Used for the firewall rule that allows Ansible to SSH into machines.
   tags = ["ansible-ssh"]
@@ -54,53 +54,71 @@ resource "google_compute_instance_template" "webserver" {
     enable-oslogin = "TRUE"
   }
 
-  lifecycle {
-    create_before_destroy = true
+}
+
+resource "google_compute_instance" "webserver_2" {
+  name        = "webserver-2"
+  description = "Simple webserver that hosts a static website with Nginx."
+
+  # Used for the firewall rule that allows Ansible to SSH into machines.
+  tags = ["ansible-ssh"]
+
+  labels = {
+
+    # Labels are used to group instances in the future Ansible postbuild step,
+    # so I'll use this to group this machine into a "webserver" group.
+    # One could theorhetically have groups like "db" or "microservice-[x]".
+    ansible = "webserver"
+  }
+
+  instance_description = "Instance responsable for acting as a web server in the example-project."
+  machine_type         = "e2-small"
+
+  scheduling {
+    automatic_restart   = true
+    on_host_maintenance = "MIGRATE"
+  }
+
+  // Create the instance based on the image passed in that comes from the previous Packer build step.
+  disk {
+    source_image = "projects/${var.project_id}/global/images/${var.image_name}-${var.commit_hash}"
+    auto_delete  = true
+    boot         = true
+  }
+
+  network_interface {
+    subnetwork = var.subnetwork
+
+    # External IP just because I don't have a private network for this demo.
+    access_config {
+    }
+  }
+
+  service_account {
+    # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
+    email  = google_service_account.webserver.email
+    scopes = ["cloud-platform"]
+  }
+
+  metadata = {
+    enable-oslogin = "TRUE"
   }
 
 }
 
-# This health check will fail until we run the final postbuild Ansible. This is fine.
-resource "google_compute_health_check" "autohealing" {
-  name                = "autohealing-health-check"
-  check_interval_sec  = 5
-  timeout_sec         = 5
-  healthy_threshold   = 2
-  unhealthy_threshold = 10 # 50 seconds
+resource "google_compute_instance_group" "webservers_instance_group" {
+  name        = "webservers"
+  description = "The group of Nginx webservers."
 
-  http_health_check {
-    request_path = "/"
-    port         = "8080"
-  }
-}
+  instances = [
+    google_compute_instance.webserver_1.id,
+    google_compute_instance.webserver_2.id,
+  ]
 
-resource "google_compute_instance_group_manager" "webserver" {
-  name = "webserver-igm"
-
-  base_instance_name = "web"
-  zone               = "us-central1-a"
-
-  version {
-    instance_template = google_compute_instance_template.webserver.id
+  named_port {
+    name = "http"
+    port = 80
   }
 
-  target_size = 2
-
-  auto_healing_policies {
-    health_check      = google_compute_health_check.autohealing.id
-    initial_delay_sec = 300
-  }
-
-  update_policy {
-    type                  = "PROACTIVE"
-    minimal_action        = "REPLACE"
-    max_surge_fixed       = 0
-    max_unavailable_fixed = 2
-    min_ready_sec         = 50
-    replacement_method    = "RECREATE"
-  }
-
-
-  wait_for_instances = true
-
+  zone = "us-central1-a"
 }
