@@ -10,6 +10,9 @@ resource "google_compute_instance_template" "webserver" {
   name_prefix        = "webserver"
   description = "This template is used to create web server instances."
 
+  # Used for the firewall rule that allows Ansible to SSH into machines.
+  tags = ["ansible-ssh"]
+
   labels = {
 
     # Labels are used to group instances in the future Ansible postbuild step,

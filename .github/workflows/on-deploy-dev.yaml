@@ -118,8 +118,8 @@ jobs:
         id: oslogin
         working-directory: ./postbuild
         run: |
-          ssh-keygen -P ""
-          gcloud compute os-login ssh-keys add --key-file=$HOME/.ssh/id_rsa.pub --ttl 10m
+          ssh-keygen -t rsa -N "" -f id_rsa.pub
+          gcloud compute os-login ssh-keys add --key-file=id_rsa.pub --ttl 10m
           current=$(gcloud config get-value account)
           id=$(gcloud iam service-accounts describe $current --format='value(uniqueId)')
           echo "::set-output name=ansible_user::sa_${id}"
