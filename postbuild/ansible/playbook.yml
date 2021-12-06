@@ -40,6 +40,14 @@
       notify:
       - Reload UFW.
 
+    - name: Configure UFW to allow all incoming 80.
+      community.general.ufw:
+        rule: allow
+        port: '80'
+        proto: tcp
+      notify:
+      - Reload UFW.
+
     - name: Enable UFW.
       community.general.ufw:
         state: enabled
