@@ -12,7 +12,7 @@ resource "google_compute_instance" "webserver_1" {
   zone        = "us-central1-a"
 
   # Used for the firewall rule that allows Ansible to SSH into machines.
-  tags = ["ansible-ssh"]
+  tags = ["ansible-ssh", "web-server"]
 
   labels = {
 
@@ -58,7 +58,7 @@ resource "google_compute_instance" "webserver_2" {
   zone        = "us-central1-a"
 
   # Used for the firewall rule that allows Ansible to SSH into machines.
-  tags = ["ansible-ssh", "webserver"]
+  tags = ["ansible-ssh", "web-server"]
 
   labels = {
 
