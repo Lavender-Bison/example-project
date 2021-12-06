@@ -7,7 +7,7 @@ resource "google_service_account" "webserver" {
 }
 
 resource "google_compute_instance" "webserver_1" {
-  name        = "webserver1"
+  name        = "webserver-1"
   description = "Simple webserver that hosts a static website with Nginx."
   zone        = "us-central1-a"
 
@@ -23,6 +23,9 @@ resource "google_compute_instance" "webserver_1" {
   }
 
   machine_type = "e2-small"
+
+  # Needed so Terraform can replace the machine.
+  allow_stopping_for_update = true
 
   boot_disk {
     initialize_params {
@@ -53,7 +56,7 @@ resource "google_compute_instance" "webserver_1" {
 }
 
 resource "google_compute_instance" "webserver_2" {
-  name        = "webserver2"
+  name        = "webserver-2"
   description = "Simple webserver that hosts a static website with Nginx."
   zone        = "us-central1-a"
 
@@ -69,6 +72,9 @@ resource "google_compute_instance" "webserver_2" {
   }
 
   machine_type = "e2-small"
+
+  # Needed so Terraform can replace the machine.
+  allow_stopping_for_update = true
 
   boot_disk {
     initialize_params {
