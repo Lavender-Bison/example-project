@@ -7,7 +7,7 @@ resource "google_service_account" "webserver" {
 }
 
 resource "google_compute_instance" "webserver_1" {
-  name        = "webserver-1"
+  name        = "webserver-1-${var.commit_hash}"
   description = "Simple webserver that hosts a static website with Nginx."
   zone        = "us-central1-a"
 
@@ -60,7 +60,7 @@ resource "google_compute_instance" "webserver_1" {
 }
 
 resource "google_compute_instance" "webserver_2" {
-  name        = "webserver-2"
+  name        = "webserver-2-${var.commit_hash}"
   description = "Simple webserver that hosts a static website with Nginx."
   zone        = "us-central1-a"
 
@@ -105,11 +105,6 @@ resource "google_compute_instance" "webserver_2" {
   metadata = {
     enable-oslogin = "TRUE"
   }
-
-  lifecycle {
-    create_before_destroy = false
-  }
-
 }
 
 resource "google_compute_instance_group" "webservers_instance_group" {
