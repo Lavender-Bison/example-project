@@ -7,7 +7,7 @@ resource "google_service_account" "webserver" {
 }
 
 resource "google_compute_instance" "webserver_1" {
-  name        = "webserver-1"
+  name        = "webserver1"
   description = "Simple webserver that hosts a static website with Nginx."
   zone        = "us-central1-a"
 
@@ -53,7 +53,7 @@ resource "google_compute_instance" "webserver_1" {
 }
 
 resource "google_compute_instance" "webserver_2" {
-  name        = "webserver-2"
+  name        = "webserver2"
   description = "Simple webserver that hosts a static website with Nginx."
   zone        = "us-central1-a"
 
