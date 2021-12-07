@@ -141,6 +141,17 @@ resource "google_compute_managed_ssl_certificate" "example" {
   }
 }
 
+resource "google_compute_health_check" "example" {
+  name = "example"
+
+  timeout_sec        = 1
+  check_interval_sec = 1
+
+  http_health_check {
+    port = "80"
+  }
+}
+
 resource "google_compute_backend_service" "example" {
   name        = "example"
   project     = var.project_id
@@ -156,6 +167,10 @@ resource "google_compute_backend_service" "example" {
     negative_caching             = true
     signed_url_cache_max_age_sec = 7200
   }
+
+  health_checks = [
+    google_compute_health_check.example.id
+  ]
 
   backend {
     group = google_compute_instance_group.webservers_instance_group.id
