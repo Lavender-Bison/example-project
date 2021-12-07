@@ -139,10 +139,6 @@ resource "google_compute_managed_ssl_certificate" "example" {
   managed {
     domains = [var.dns_name]
   }
-
-  depends_on = [
-    google_dns_record_set.example
-  ]
 }
 
 resource "google_compute_backend_service" "example" {
