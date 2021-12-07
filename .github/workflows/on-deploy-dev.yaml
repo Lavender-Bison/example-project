@@ -63,6 +63,7 @@ jobs:
       PROJECT_ID: example-dev-4c39ae
       TF_BUCKET: 134926683163-tfstate
       SUBNETWORK: projects/network-prod-2a8575/regions/us-central1/subnetworks/general-purpose-computation-dev
+      DNS_NAME: example-d.lavenderbison.com
     steps:
       - name: Install Terraform
         run: |

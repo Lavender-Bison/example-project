@@ -2,10 +2,10 @@ server {
         listen 80;
         listen [::]:80;
 
-        root /var/www/example.lavenderbison.com/html;
+        root /var/www/example/html;
         index index.html;
 
-        server_name example.lavenderbison.com;
+        server_name example-d.lavenderbison.com example-q.lavenderbison.com example.lavenderbison.com;
 
         location / {
                 try_files $uri $uri/ =404;

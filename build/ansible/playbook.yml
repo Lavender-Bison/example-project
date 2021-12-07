@@ -23,15 +23,15 @@
     - name: Copy website source to image.
       ansible.builtin.copy:
         src: ../../../website/src/
-        dest: /var/www/example.lavenderbison.com/html/
+        dest: /var/www/example/html/
       
     - name: Move website config to Nginx sites available.
       ansible.builtin.copy:
-        src: example.lavenderbison.com
+        src: example
         dest: /etc/nginx/sites-available/
 
     - name: Move website from sites available to sites enabled.
       ansible.builtin.file:
-        src: /etc/nginx/sites-available/example.lavenderbison.com
-        dest: /etc/nginx/sites-enabled/example.lavenderbison.com
+        src: /etc/nginx/sites-available/example
+        dest: /etc/nginx/sites-enabled/example
         state: link

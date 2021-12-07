@@ -23,3 +23,7 @@ variable "commit_hash" {
 variable "subnetwork" {
   type = string
 }
+
+variable "dns_name" {
+  type = string
+}
