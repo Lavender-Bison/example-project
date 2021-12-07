@@ -55,7 +55,7 @@
     - name: Start the Nginx service.
       service:
         name: nginx
-        state: started
+        state: restarted
 
   handlers:
   - name: Reload UFW.
