@@ -45,16 +45,20 @@ jobs:
         uses: hashicorp/setup-terraform@v1
       - name: Terraform Format
         id: fmt
+        working-directory: ./infrastructure
         run: terraform fmt -check
       - name: Terraform Init
         id: init
+        working-directory: ./infrastructure
         run: terraform init -backend-config="bucket=${{ env.TF_BUCKET }}"
       - name: Terraform Validate
         id: validate
+        working-directory: ./infrastructure
         run: terraform validate -no-color
       - name: Terraform Plan
         id: plan
-        run:
+        working-directory: ./infrastructure
+        run: |
           terraform plan -var "org_id=${{ env.ORG_ID }}" -var "project_id=${{ env.PROJECT_ID }}" \
           -var "image_name=${{ needs.build.outputs.image_name }}" -var "commit_hash=${{ needs.build.outputs.commit_hash }}" \
           -var "subnetwork=${{ env.SUBNETWORK }}" -var "dns_name=${{ env.DNS_NAME }}"
