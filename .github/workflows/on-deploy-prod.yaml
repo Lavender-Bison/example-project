@@ -37,7 +37,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@master
         with:
           project_id: ${{ env.PROJECT_ID }}
-          service_account_key: ${{ secrets.BUILD_KEY_DEV }}
+          service_account_key: ${{ secrets.BUILD_KEY_PROD }}
           export_default_credentials: true
       - name: Packer Init
         run: packer init build/webserver.pkr.hcl
@@ -110,7 +110,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@master
         with:
           project_id: ${{ env.PROJECT_ID }}
-          service_account_key: ${{ secrets.BUILD_KEY_DEV }}
+          service_account_key: ${{ secrets.BUILD_KEY_PROD }}
           export_default_credentials: true
 
         # This should really be an action.
