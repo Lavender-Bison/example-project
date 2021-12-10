@@ -1,6 +1,3 @@
-# Define infrastructure for a single two node managed instance group of VMs, load balanced
-# using a public HTTP/s load balancer.
-
 resource "google_service_account" "webserver" {
   account_id   = "web-server"
   display_name = "Web Server Service Account"
