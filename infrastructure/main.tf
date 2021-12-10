@@ -50,10 +50,6 @@ resource "google_compute_instance" "webserver_1" {
     enable-oslogin = "TRUE"
   }
 
-  lifecycle {
-    create_before_destroy = false
-  }
-
 }
 
 resource "google_compute_instance" "webserver_2" {
