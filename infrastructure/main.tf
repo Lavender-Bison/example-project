@@ -119,6 +119,12 @@ resource "google_compute_instance_group" "webservers_instance_group" {
   lifecycle {
     create_before_destroy = true
   }
+
+  timeouts {
+    create = "20m"
+    delete = "20m"
+    update = "20m"
+  }
 }
 
 resource "google_compute_global_address" "example" {
