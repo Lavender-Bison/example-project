@@ -1,0 +1,10 @@
+plugin: gcp_compute
+
+projects:
+  - example-dev-4c39ae
+
+keyed_groups:
+  - prefix: label
+    key: labels
+
+auth_kind: application

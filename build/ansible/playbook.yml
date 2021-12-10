@@ -1,0 +1,37 @@
+# This playbook runs on the image being built with Packer.
+#
+# You could theorhetically do the following things here:
+#   * Build in the source code for your app.
+#   * Install application dependencies.
+#   * Make build time configuration changes to the image.
+#
+# Obviously it doesn't make sense to start running your app here, but you could include a systemd or keepalived service
+# file to ensure your app starts when the future instance of this image starts.
+- name: Webserver Build Playbook
+  hosts: all # It's all, but really just the single image being built with Packer.
+  become: yes
+  tasks:
+
+    # This example is for a Nginx webserver, so I'll just install Nginx and add my website here.
+    # I'll use the postbuild Ansible step to start the server and adjust Ubuntu firewall.
+
+    - name: Install Nginx.
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+
+    - name: Copy website source to image.
+      ansible.builtin.copy:
+        src: ../../../website/src/
+        dest: /var/www/example/html/
+      
+    - name: Move website config to Nginx sites available.
+      ansible.builtin.copy:
+        src: example
+        dest: /etc/nginx/sites-available/
+
+    - name: Move website from sites available to sites enabled.
+      ansible.builtin.file:
+        src: /etc/nginx/sites-available/example
+        dest: /etc/nginx/sites-enabled/example
+        state: link
