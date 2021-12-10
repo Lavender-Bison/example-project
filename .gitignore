@@ -33,3 +33,7 @@ override.tf.json
 
 # No local Terraform variables.
 *.auto.tfvars
+
+# No local Packer variables.
+local.pkrvars.hcl
+*.auto.pkrvars.hcl

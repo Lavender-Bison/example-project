@@ -1,0 +1,63 @@
+- name: Example Postbuild Playbook
+
+  # Only configure the machines we gave the {ansible = webserver} label in the Terraform.
+  hosts: label_ansible_webserver
+  become: yes
+  gather_facts: yes
+  tasks:
+
+    # First step is always to wait for all machines in the group to come up in the case where
+    # this playbook starts running before the machines do.
+    - name: Wait for machine start.
+      wait_for_connection:
+        timeout: 600 # ten minutes
+
+    - name: Ensure UFW is installed.
+      ansible.builtin.apt:
+        name: ufw
+        state: present
+    
+    - name: Configure UFW to deny all incoming.
+      community.general.ufw:
+        direction: incoming
+        proto: any
+        policy: deny
+      notify:
+      - Reload UFW.
+
+    - name: Configure UFW to allow all outgoing.
+      community.general.ufw:
+        direction: outgoing
+        proto: any
+        policy: allow
+      notify:
+      - Reload UFW.
+
+    - name: Configure UFW to allow all incoming SSH.
+      community.general.ufw:
+        rule: allow
+        name: OpenSSH
+      notify:
+      - Reload UFW.
+
+    - name: Configure UFW to allow all incoming 80.
+      community.general.ufw:
+        rule: allow
+        port: '80'
+        proto: tcp
+      notify:
+      - Reload UFW.
+
+    - name: Enable UFW.
+      community.general.ufw:
+        state: enabled
+      
+    - name: Start the Nginx service.
+      service:
+        name: nginx
+        state: restarted
+
+  handlers:
+  - name: Reload UFW.
+    ufw:
+      state: reloaded
